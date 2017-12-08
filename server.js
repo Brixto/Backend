@@ -7,7 +7,7 @@ app.get('/', function (req, res) {
     res.send('Hello');
 });
 
-http.listen(3000, function () {
+http.listen(process.env.PORT, function () {
     console.log('server listening to port 3000');
 });
 
