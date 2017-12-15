@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Socket Backend</title>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+</head>
+
+<body>
+    <ul id="messages">
+        <script>
+            $(function () {
+                var socket = io();
+                socket.on('connection', function (msg) {
+                    $('#messages').append($('<li>').text(msg));
+                    window.scrollTo(0, document.body.scrollHeight);
+                });
+            });
+        </script>
+    </ul>
+</body>
+
+</html>
