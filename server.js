@@ -3,18 +3,30 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
+app.get('/', function (req, res) {
+    res.sendFile(__dirname + '/index.html');
 });
 
 http.listen(process.env.PORT || 3000, function () {
     console.log('server listening to port 3000');
 });
 
+var playerCount = 0;
+
 io.on('connection', function (socket) {
     console.log('a user connected');
-    socket.on('message', function (msg) {
-        io.emit('message', msg + '123');
-        console.log(msg);
-    })
+
+    playerCount++;
+
+    for (var i = 0; i < playerCount; i++) {
+        console.log('sending spawn to player');
+        socket.emit('spawn');
+    }
+
+    socket.broadcast.emit('spawn');
+
+    socket.on('disconnect', function () {
+        console.log('a user disconnected');
+        playerCount--;
+    });
 })
