@@ -3,10 +3,6 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
-});
-
 http.listen(process.env.PORT || 3000, function () {
     console.log('server listening to port 3000');
 });
@@ -24,6 +20,15 @@ io.on('connection', function (socket) {
     }
 
     socket.broadcast.emit('spawn');
+
+    socket.on('recognize', function(data) {
+        console.log('recognizing player')
+        console.log(data);
+    });
+
+    socket.on('test', function() {
+        console.log("test");
+    });
 
     socket.on('disconnect', function () {
         console.log('a user disconnected');
