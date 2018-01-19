@@ -7,10 +7,16 @@ http.listen(process.env.PORT || 3000, function () {
     console.log('server listening to port 3000');
 });
 
+app.get('/', function (req, res) {
+  res.sendFile(__dirname + '/index.html');
+});
+
 var playerCount = 0;
 
 io.on('connection', function (socket) {
     console.log('a user connected');
+
+    socket.emit("connect");
 
     playerCount++;
 
