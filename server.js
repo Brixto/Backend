@@ -13,12 +13,13 @@ app.get('/', function (req, res) {
 });
 
 var playerCount = 0;
+var playerId;
 
 io.on('connection', function (socket) {
     console.log('a user connected');
-    console.log('shortid: ' + shortid.generate());
+    playerId = shortid.generate();
 
-    socket.emit("connect");
+    socket.emit("register", { id: playerId });
 
     playerCount++;
 
@@ -32,6 +33,20 @@ io.on('connection', function (socket) {
     socket.on('recognize', function(data) {
         console.log('recognizing player')
         console.log(data);
+
+        // TODO: check id in mongodb and try to load user
+    });
+
+    socket.on('move', function(data) {
+        console.log('move ' + data.d.x);
+        data.id = playerId;
+        delete data.c;
+        
+        data.x = data.d.x;
+        data.y = data.d.y;
+        
+        delete data.d;
+        socket.broadcast.emit('move', data);
     });
 
     socket.on('test', function() {
