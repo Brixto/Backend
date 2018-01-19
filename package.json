@@ -12,6 +12,7 @@
   "dependencies": {
     "eslint": "^4.12.1",
     "express": "^4.16.2",
+    "shortid": "^2.2.8",
     "socket.io": "^2.0.4"
   }
 }

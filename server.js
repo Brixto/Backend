@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var shortid = require('shortid');
 
 http.listen(process.env.PORT || 3000, function () {
     console.log('server listening to port 3000');
@@ -15,6 +16,7 @@ var playerCount = 0;
 
 io.on('connection', function (socket) {
     console.log('a user connected');
+    console.log('shortid: ' + shortid.generate());
 
     socket.emit("connect");
 
