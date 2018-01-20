@@ -28,7 +28,7 @@ io.on('connection', function (socket) {
         socket.emit('spawn', { id: playerId });
     }
 
-    socket.broadcast.emit('spawn');
+    socket.broadcast.emit('spawn', { id: playerId });
 
     socket.on('recognize', function(data) {
         console.log('recognizing player')
