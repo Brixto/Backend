@@ -25,7 +25,7 @@ io.on('connection', function (socket) {
 
     for (var i = 0; i < playerCount; i++) {
         console.log('sending spawn to player');
-        socket.emit('spawn');
+        socket.emit('spawn', { id: playerId });
     }
 
     socket.broadcast.emit('spawn');
