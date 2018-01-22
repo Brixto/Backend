@@ -9,52 +9,58 @@ http.listen(process.env.PORT || 3000, function () {
 });
 
 app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/index.html');
 });
 
-var playerCount = 0;
+var players = [];
 var playerId;
 
 io.on('connection', function (socket) {
     console.log('a user connected');
+
     playerId = shortid.generate();
 
+    var player = {
+        id: playerId
+    };
+
+    players[playerId] = player;
+
     socket.emit("register", { id: playerId });
-
-    playerCount++;
-
-    for (var i = 0; i < playerCount; i++) {
-        console.log('sending spawn to player');
-        socket.emit('spawn', { id: playerId });
-    }
-
     socket.broadcast.emit('spawn', { id: playerId });
 
-    socket.on('recognize', function(data) {
+    for (var id in players) {
+        if (id !== playerId) {
+            socket.emit('spawn', { id: playerId });
+        }
+    }
+
+    socket.on('recognize', function (data) {
         console.log('recognizing player')
         console.log(data);
 
         // TODO: check id in mongodb and try to load user
     });
 
-    socket.on('move', function(data) {
+    socket.on('move', function (data) {
         console.log('move ' + data.d.x);
         data.id = playerId;
         delete data.c;
-        
+
         data.x = data.d.x;
         data.y = data.d.y;
-        
+
         delete data.d;
         socket.broadcast.emit('move', data);
     });
 
-    socket.on('test', function() {
+    socket.on('test', function () {
         console.log("test");
     });
 
     socket.on('disconnect', function () {
         console.log('a user disconnected');
-        playerCount--;
+        delete players[playerId];
+        socket.broadcast.emit('disconnected', { id: playerId });
     });
 })
