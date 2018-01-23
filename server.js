@@ -13,12 +13,11 @@ app.get('/', function (req, res) {
 });
 
 var players = [];
-var playerId;
 
 io.on('connection', function (socket) {
-    console.log('a user connected');
 
-    playerId = shortid.generate();
+    var playerId = shortid.generate();
+    console.log('a user connected ' + playerId);
 
     var player = {
         id: playerId
@@ -26,12 +25,11 @@ io.on('connection', function (socket) {
 
     players[playerId] = player;
 
-    socket.emit("register", { id: playerId });
+    socket.emit('register', { id: playerId });
     socket.broadcast.emit('spawn', { id: playerId });
-
     for (var id in players) {
         if (id !== playerId) {
-            socket.emit('spawn', { id: playerId });
+            socket.emit('spawn', { id: id });
         }
     }
 
