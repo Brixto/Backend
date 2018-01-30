@@ -2,15 +2,14 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var matchmaking = require('./matchmaking.js');
 var shortid = require('shortid');
 
 http.listen(process.env.PORT || 3000, function () {
     console.log('server listening to port 3000');
 });
 
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
-});
+app.use(express.static(__dirname + '/royale'));
 
 var players = [];
 
@@ -20,10 +19,12 @@ io.on('connection', function (socket) {
     console.log('a user connected ' + playerId);
 
     var player = {
-        id: playerId
+        id: playerId,
+        rank: 10
     };
 
     players[playerId] = player;
+    matchmaking.queueForGame(player);
 
     socket.emit('register', { id: playerId });
     socket.broadcast.emit('spawn', { id: playerId });
@@ -41,7 +42,6 @@ io.on('connection', function (socket) {
     });
 
     socket.on('move', function (data) {
-        console.log('move ' + data.d.x);
         data.id = playerId;
         delete data.c;
 
