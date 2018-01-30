@@ -9,7 +9,7 @@ http.listen(process.env.PORT || 3000, function () {
     console.log('server listening to port 3000');
 });
 
-app.use(express.static(__dirname + '/royale'));
+app.use(express.static(__dirname + '/royale-webgl'));
 
 var players = [];
 
