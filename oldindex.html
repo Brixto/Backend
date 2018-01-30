@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Socket Backend</title>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+</head>
+
+<body>
+  <ul id="messages">
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect('http://localhost:3000');
+      socket.emit('recognize', 'abcde');
+
+      socket.on('spawn', function () {
+        $('#messages').append($('<li>').text('abc'));
+      })
+    </script>
+  </ul>
+</body>
+
+</html>
